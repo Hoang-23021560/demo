@@ -26,20 +26,20 @@ public class UserEntity {
 //    private List<UserRoleEntity> userRoleEntities = new ArrayList<>();
 
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "userrole",// ten bang trung gian
     joinColumns = @JoinColumn(name = "userId",nullable = false),// join voi khoa ngoai cua bang hien tai
     inverseJoinColumns = @JoinColumn(name = "roleId",nullable = false))
     private List<RoleEntity> roles = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "aggignmentbuilding",
+    @JoinTable(name = "assignmentbuilding",
     joinColumns = @JoinColumn(name = "userId",nullable = false),
     inverseJoinColumns = @JoinColumn(name = "buildingId",nullable = false))
     private List<BuildingEntity> buildings;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "assigmentcustomer",
+    @JoinTable(name = "assignmentcustomer",
     joinColumns = @JoinColumn(name = "userId",nullable = false),
     inverseJoinColumns = @JoinColumn(name = "customerId",nullable = false))
     private List<CustomerEntity> customers;
@@ -107,5 +107,22 @@ public class UserEntity {
 
     public void setModifiedDate(Date modifiedDate) {
         this.modifiedDate = modifiedDate;
+
+    }
+
+    public List<BuildingEntity> getBuildings() {
+        return buildings;
+    }
+
+    public void setBuildings(List<BuildingEntity> buildings) {
+        this.buildings = buildings;
+    }
+
+    public List<CustomerEntity> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<CustomerEntity> customers) {
+        this.customers = customers;
     }
 }

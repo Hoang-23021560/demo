@@ -72,4 +72,5 @@ public class TransactionsEntity {
     public void setModifiedDate(Date modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
+
 }

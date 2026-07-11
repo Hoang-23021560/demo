@@ -29,12 +29,29 @@ public class BuildingServiceImpl implements BuildingService{
     private BuildingSearchBuilderConverter buildingSearchBuilderConverter;
 	
 	@Override
-	public List<BuildingSearchResponse> findAll( BuildingSearchBuilder builder) {
+	public List<BuildingSearchResponse> findAll( BuildingSearchRequest request) {
 //        BuildingSearchBuilder buildingSearchBuilder = buildingSearchBuilderConverter.toBuildingSearchConverter(params,Code);
-		
-			
+
+        BuildingSearchBuilder searchBuilder = new BuildingSearchBuilder.Builder()
+                .setName(request.getName())
+                .setFloorArea(request.getFloorArea() != null ? request.getFloorArea().doubleValue() : null)
+                .setDistrictId(request.getDistrictId())
+                .setWard(request.getWard())
+                .setStreet(request.getStreet())
+                .setNumberOfBasement(request.getNumberOfBasement())
+                .setDirection(request.getDirection())
+                .setLevel(request.getLevel())
+                .setRentAreaFrom(request.getRentAreaFrom() != null ? request.getRentAreaFrom().doubleValue() : null)
+                .setRentAreaTo(request.getRentAreaTo() != null ? request.getRentAreaTo().doubleValue() : null)
+                .setRentPriceFrom(request.getRentPriceFrom())
+                .setRentPriceTo(request.getRentPriceTo())
+                .setManagerName(request.getManagerName())
+                .setManagerPhone(request.getManagerPhone())
+                .setStaffId(request.getStaffId())
+                .setCode(request.getCode())
+                .build();
 		// 1. Gọi tầng Repository để lấy dữ liệu thực thể đã qua bộ lọc 16 fields
-        List<BuildingEntity> buildingEntities = buildingRepository.findAll( builder);
+        List<BuildingEntity> buildingEntities = buildingRepository.findAll(searchBuilder);
         
         
         // List chứa kết quả trả ra cho người dùng (11 fields)

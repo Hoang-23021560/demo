@@ -26,7 +26,7 @@ public class DistrictEntity {
         return buildings;
     }
 
-    public void setItems(List<BuildingEntity> Buildings) {
+    public void setBuildings(List<BuildingEntity> Buildings) {
         this.buildings = Buildings;
     }
     public Long getId() {
@@ -52,4 +52,5 @@ public class DistrictEntity {
     public void setCode(String code) {
         this.code = code;
     }
+
 }

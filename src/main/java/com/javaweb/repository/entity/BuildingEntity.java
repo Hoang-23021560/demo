@@ -3,6 +3,7 @@ package com.javaweb.repository.entity;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //Nhiệm vụ cốt lõi của BuildingEntity là đại diện trực tiếp cho cấu trúc dữ liệu của bảng building trong Database dưới dạng một đối tượng Java (Object).
@@ -34,7 +35,7 @@ public class BuildingEntity {
     private String level;
 	@Column(name = "rentPrice")
     private Double rentPrice;
-	@Column(name = "servicFee")
+	@Column(name = "serviceFee")
     private Double serviceFee;
 	@Column(name = "managerName")
     private String managerName;
@@ -42,6 +43,142 @@ public class BuildingEntity {
     private String managerPhone;
 	@Column(name = "brokerageFeePercent")
     private Double brokerageFeePercent;
+	@Column(name = "structure")
+
+	private String structure;
+	@Column(name = "priceDescription")
+	private String priceDescription;
+	@Column(name = "carFee")
+	private Double carFee;
+	@Column(name = "motoFee")
+	private Double motoFee;
+	@Column(name = "overtimeFee")
+	private Double overtimeFee;
+
+	@Column(name = "electricityFee")
+	private Double electricityFee;
+
+	@Column(name = "depositMonths")
+	private Integer depositMonths;
+
+	@Column(name = "paymentTerm", length = 100)
+	private String paymentTerm;
+	@Column(name = "note", columnDefinition = "TEXT")
+	private String note;
+
+	@Column(name = "createdDate")
+	private Date createdDate;
+
+	@Column(name = "modifiedDate")
+	private Date modifiedDate;
+
+	public String getStructure() {
+		return structure;
+	}
+
+	public void setStructure(String structure) {
+		this.structure = structure;
+	}
+
+	public String getPriceDescription() {
+		return priceDescription;
+	}
+
+	public void setPriceDescription(String priceDescription) {
+		this.priceDescription = priceDescription;
+	}
+
+	public Double getCarFee() {
+		return carFee;
+	}
+
+	public void setCarFee(Double carFee) {
+		this.carFee = carFee;
+	}
+
+	public Double getMotoFee() {
+		return motoFee;
+	}
+
+	public void setMotoFee(Double motoFee) {
+		this.motoFee = motoFee;
+	}
+
+	public Double getOvertimeFee() {
+		return overtimeFee;
+	}
+
+	public void setOvertimeFee(Double overtimeFee) {
+		this.overtimeFee = overtimeFee;
+	}
+
+	public Double getElectricityFee() {
+		return electricityFee;
+	}
+
+	public void setElectricityFee(Double electricityFee) {
+		this.electricityFee = electricityFee;
+	}
+
+	public Integer getDepositMonths() {
+		return depositMonths;
+	}
+
+	public void setDepositMonths(Integer depositMonths) {
+		this.depositMonths = depositMonths;
+	}
+
+	public String getPaymentTerm() {
+		return paymentTerm;
+	}
+
+	public void setPaymentTerm(String paymentTerm) {
+		this.paymentTerm = paymentTerm;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	public List<BuildingTypeEntity> getBuildingType() {
+		return buildingType;
+	}
+
+	public void setBuildingType(List<BuildingTypeEntity> buildingType) {
+		this.buildingType = buildingType;
+	}
+
+	public List<UserEntity> getUser() {
+		return user;
+	}
+
+	public void setUser(List<UserEntity> user) {
+		this.user = user;
+	}
+//	@Column(name = "decorationTime", length = 100)
+//	private String decorationTime;
+
+
     
 //    // --- CÁC TRƯỜNG BỔ SUNG ĐỂ HỨNG DỮ LIỆU JOIN ---
 //    private String nameDistrict; // Lấy từ bảng District
@@ -63,7 +200,7 @@ public class BuildingEntity {
 	private List<RentAreaEntity> rentarea = new ArrayList<>();
 
 
-	@OneToMany(mappedBy = "buildingType",fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "building",fetch = FetchType.LAZY)
 	private List<BuildingTypeEntity> buildingType;
 
 	@ManyToMany(mappedBy = "buildings",fetch = FetchType.LAZY)

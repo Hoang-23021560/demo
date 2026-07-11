@@ -15,14 +15,14 @@ public class TransactionTypeEntity {
     @Column(name = "code")
     private String code;
     @OneToMany(mappedBy = "transactionTypes",fetch = FetchType.LAZY)
-    private List<TransactionsEntity> transactionTypes;
+    private List<TransactionsEntity> transactions;
 
-    public List<TransactionsEntity> getTransactionTypes() {
-        return transactionTypes;
+    public List<TransactionsEntity> getTransactions() {
+        return transactions;
     }
 
-    public void setTransactionTypes(List<TransactionsEntity> transactionTypes) {
-        this.transactionTypes = transactionTypes;
+    public void setTransactions(List<TransactionsEntity> transactions) {
+        this.transactions = transactions;
     }
 
     public Long getId() {
@@ -48,4 +48,5 @@ public class TransactionTypeEntity {
     public void setCode(String code) {
         this.code = code;
     }
+
 }

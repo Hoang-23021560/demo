@@ -10,6 +10,7 @@ import java.util.List;
 @Table(name = "role")
 public class RoleEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
     @Column(name = "code")
     private String code;
@@ -71,5 +72,13 @@ public class RoleEntity {
 
     public void setModifiedDate(Date modifiedDate) {
         this.modifiedDate = modifiedDate;
+    }
+
+    public List<UserEntity> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UserEntity> users) {
+        this.users = users;
     }
 }

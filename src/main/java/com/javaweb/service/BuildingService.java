@@ -13,5 +13,5 @@ import com.javaweb.repository.entity.BuildingEntity;
 //interface chỉ chứa các hằng số và abstract method
 //
 public interface BuildingService {
-	List<BuildingSearchResponse> findAll( BuildingSearchBuilder builder);
+	List<BuildingSearchResponse> findAll( BuildingSearchRequest request);
 }

@@ -90,4 +90,5 @@ public class CustomerEntity {
     public void setUsers(List<UserEntity> users) {
         this.users = users;
     }
+
 }

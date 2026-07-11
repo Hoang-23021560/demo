@@ -39,8 +39,8 @@ public class BuidingAPI {
     private LocalContainerEntityManagerFactoryBean entityManagerFactory;
 
 	@GetMapping("/api/building/")
-	public List<BuildingSearchResponse> getBuilding( BuildingSearchBuilder builder) {
-		List<BuildingSearchResponse> result = buildingService.findAll(builder);
+	public List<BuildingSearchResponse> getBuilding(BuildingSearchRequest request) {
+		List<BuildingSearchResponse> result = buildingService.findAll(request);
 		return result;
 
 	}
