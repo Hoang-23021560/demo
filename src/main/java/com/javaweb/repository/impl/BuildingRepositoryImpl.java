@@ -71,7 +71,7 @@ public class BuildingRepositoryImpl implements BuildingRepository {
     }
     public void querySpecial(BuildingSearchBuilder builder,StringBuilder jpql){
         if(builder.getStaffId() != null){
-            jpql.append(" AND b.userId = " + builder.getStaffId());
+            jpql.append(" AND u.id = " + builder.getStaffId());
         }
         if(builder.getRentAreaFrom() != null){
             jpql.append(" AND ra.value >= " + builder.getRentAreaFrom());
@@ -80,10 +80,10 @@ public class BuildingRepositoryImpl implements BuildingRepository {
             jpql.append(" AND ra.value <= " + builder.getRentAreaTo());
         }
         if(builder.getRentPriceFrom() != null){
-            jpql.append(" AND ra.rentPrice >=" + builder.getRentPriceFrom());
+            jpql.append(" AND b.rentPrice >=" + builder.getRentPriceFrom());
         }
         if(builder.getRentAreaTo() != null){
-            jpql.append(" AND ra.rentPrice <= " + builder.getRentAreaTo());
+            jpql.append(" AND b.rentPrice <= " + builder.getRentAreaTo());
         }
         if(builder.getCode() != null && builder.getCode().size() != 0){
             String codeJoin = builder.getCode().stream()

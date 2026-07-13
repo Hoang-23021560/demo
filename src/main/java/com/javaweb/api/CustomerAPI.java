@@ -32,7 +32,7 @@ public class CustomerAPI {
     public void createCustomer(@RequestBody CustomerRequest request){
         customerService.createOrUpdate(request);
     }
-    @PutMapping("api/cutomer/")
+    @PutMapping("api/customer/")
     @Transactional
     public void updateCustomer(@RequestBody CustomerRequest request){
         customerService.createOrUpdate(request);

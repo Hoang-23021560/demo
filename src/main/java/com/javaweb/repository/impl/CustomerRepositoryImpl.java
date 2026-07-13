@@ -26,13 +26,13 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             sql.append(" AND c.id = " + request.getId());
         }
         if(checkString(request.getName())){
-            sql.append(" AND c.name like '%" + request.getName() + "'");
+            sql.append(" AND c.name like '%" + request.getName() + "%'");
         }
         if(checkString(request.getPhone())){
-            sql.append(" AND c.phone like '%" + request.getPhone() + "'");
+            sql.append(" AND c.phone like '%" + request.getPhone() + "%'");
         }
         if(checkString(request.getEmail())){
-            sql.append(" AND c.email like '%" + request.getEmail() + "'");
+            sql.append(" AND c.email like '%" + request.getEmail() + "%'");
         }
 
 
