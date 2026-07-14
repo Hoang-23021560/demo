@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -44,6 +45,8 @@ public class TransactionServiceImpl implements TransactionService {
     public void createTransaction(TransactionRequest request) {
         TransactionsEntity transaction = new TransactionsEntity();
         transaction.setNote(request.getNote());
+        transaction.setCreatedDate(new Date());
+        transaction.setModifiedDate(new Date());
 
         CustomerEntity customer = customerRepository.findById(request.getCustomerId());
         if (customer == null) {
