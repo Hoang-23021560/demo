@@ -1,4 +1,4 @@
-package com.javaweb.api;
+package com.javaweb.controller;
 
 import com.javaweb.model.CustomerRequest;
 import com.javaweb.model.CustomerSearchRequest;
@@ -32,12 +32,12 @@ public class CustomerAPI {
     public void createCustomer(@RequestBody CustomerRequest request){
         customerService.createOrUpdate(request);
     }
-    @PutMapping("api/customer/")
+    @PutMapping("/api/customer/")
     @Transactional
     public void updateCustomer(@RequestBody CustomerRequest request){
         customerService.createOrUpdate(request);
     }
-    @DeleteMapping("api/customer/{id}")
+    @DeleteMapping("/api/customer/{id}")
     @Transactional
     public void deleteCustomer(@PathVariable Long id){
         customerService.deleteCustomer(id);

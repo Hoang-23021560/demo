@@ -2,11 +2,14 @@ package com.javaweb.controller;
 
 import com.javaweb.model.BuildingResponse;
 import com.javaweb.model.BuildingSearchRequest;
+import com.javaweb.model.CustomerResponse;
+import com.javaweb.model.CustomerSearchRequest;
 import com.javaweb.repository.DistrictRepository;
 import com.javaweb.repository.UserRepository;
 import com.javaweb.repository.entity.DistrictEntity;
 import com.javaweb.repository.entity.UserEntity;
 import com.javaweb.service.BuildingService;
+import com.javaweb.service.CustomerService;
 import com.javaweb.service.impl.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -20,16 +23,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-/**
- * AdminBuildingController: trang quản trị - quản lý tòa nhà.
- * Yêu cầu đăng nhập với ROLE_MANAGER hoặc ROLE_STAFF.
- */
 @Controller
 @RequestMapping("/admin")
 public class AdminBuildingController {
 
     @Autowired
     private BuildingService buildingService;
+
+    @Autowired
+    private CustomerService customerService;
 
     @Autowired
     private DistrictRepository districtRepository;
@@ -40,68 +42,81 @@ public class AdminBuildingController {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    /**
-     * GET /admin/building - hiển thị trang danh sách tòa nhà với form tìm kiếm
-     */
+    // -------------------------------------------------------
+    // BUILDING
+    // -------------------------------------------------------
+
     @GetMapping({"/", "/building"})
     public String buildingList(Model model) {
-        // Load data cho dropdown
         List<DistrictEntity> districts = districtRepository.findAll();
         List<UserEntity> staffList = userRepository.findAllStaff();
-
         model.addAttribute("districts", districts);
         model.addAttribute("staffList", staffList);
         model.addAttribute("searchRequest", new BuildingSearchRequest());
-        model.addAttribute("buildings", List.of()); // Chưa tìm kiếm -> rỗng
-
+        model.addAttribute("buildings", List.of());
         addCurrentUserToModel(model);
         return "admin/building-list";
     }
 
-    /**
-     * POST /admin/building/search - thực hiện tìm kiếm
-     */
     @PostMapping("/building/search")
     public String searchBuilding(
             @ModelAttribute("searchRequest") BuildingSearchRequest request,
             Model model) {
-
         List<BuildingResponse> buildings = buildingService.findAll(request);
-
-        // Load lại data cho dropdown sau khi search
         List<DistrictEntity> districts = districtRepository.findAll();
         List<UserEntity> staffList = userRepository.findAllStaff();
-
         model.addAttribute("districts", districts);
         model.addAttribute("staffList", staffList);
         model.addAttribute("searchRequest", request);
         model.addAttribute("buildings", buildings);
         model.addAttribute("totalResults", buildings.size());
-
         addCurrentUserToModel(model);
         return "admin/building-list";
     }
 
-    /**
-     * GET /admin/account - trang quản lý tài khoản (placeholder)
-     */
+    // -------------------------------------------------------
+    // CUSTOMER
+    // -------------------------------------------------------
+
+    @GetMapping("/customer")
+    public String customerList(Model model) {
+        // Load tất cả KH ngay khi vào trang
+        List<CustomerResponse> customers = customerService.findALl(new CustomerSearchRequest());
+        List<UserEntity> staffList = userRepository.findAllStaff();
+        model.addAttribute("customers", customers);
+        model.addAttribute("staffList", staffList);
+        model.addAttribute("searchRequest", new CustomerSearchRequest());
+        model.addAttribute("totalResults", customers.size());
+        addCurrentUserToModel(model);
+        return "admin/customer-list";
+    }
+
+    @PostMapping("/customer/search")
+    public String searchCustomer(
+            @ModelAttribute("searchRequest") CustomerSearchRequest request,
+            Model model) {
+        List<CustomerResponse> customers = customerService.findALl(request);
+        List<UserEntity> staffList = userRepository.findAllStaff();
+        model.addAttribute("customers", customers);
+        model.addAttribute("staffList", staffList);
+        model.addAttribute("searchRequest", request);
+        model.addAttribute("totalResults", customers.size());
+        addCurrentUserToModel(model);
+        return "admin/customer-list";
+    }
+
+    // -------------------------------------------------------
+    // ACCOUNT
+    // -------------------------------------------------------
+
     @GetMapping("/account")
     public String accountManagement(Model model) {
         addCurrentUserToModel(model);
         return "admin/account-list";
     }
 
-    /**
-     * GET /admin/customer - trang quản lý khách hàng (placeholder)
-     */
-    @GetMapping("/customer")
-    public String customerManagement(Model model) {
-        addCurrentUserToModel(model);
-        return "admin/customer-list";
-    }
-
     // -------------------------------------------------------
-    // Helper: thêm tên user hiện tại vào model
+    // Helper
     // -------------------------------------------------------
     private void addCurrentUserToModel(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

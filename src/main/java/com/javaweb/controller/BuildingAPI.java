@@ -1,4 +1,4 @@
-package com.javaweb.api;
+package com.javaweb.controller;
 
 import java.util.*;
 
@@ -17,7 +17,7 @@ import com.javaweb.service.BuildingService;
 
 @RestController
 @PropertySource("classpath:application.properties")
-public class BuidingAPI {
+public class BuildingAPI {
 	@Autowired
 	private EntityManager entityManager;
 	@Autowired
@@ -114,10 +114,10 @@ public class BuidingAPI {
 		buildingService.insertOrUpdate(request);
 
 	}
-	@DeleteMapping("/api/building/{districtId}")
+	@DeleteMapping("/api/building/{ids}")
 	@Transactional
-	public void deleteBuilding(@PathVariable List<Long> districtId) {
-		buildingService.delete(districtId);
+	public void deleteBuilding(@PathVariable List<Long> ids) {
+		buildingService.delete(ids);
 	}
 
 }

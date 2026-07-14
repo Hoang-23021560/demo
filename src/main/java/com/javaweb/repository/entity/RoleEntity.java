@@ -16,10 +16,12 @@ public class RoleEntity {
     private String code;
     @Column(name = "name")
     private String name;
-    @Column(name = "createDate")
-    private Date createDate;
+
+    @Column(name = "createdDate")
+    private Date createdDate;
     @Column(name = "modifiedDate")
     private Date modifiedDate;
+
 //    @OneToMany(mappedBy = "role",fetch = FetchType.LAZY)
 //    private List<UserRoleEntity> userRoleEntities = new ArrayList<>();
 
@@ -56,22 +58,6 @@ public class RoleEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public Date getModifiedDate() {
-        return modifiedDate;
-    }
-
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
     }
 
     public List<UserEntity> getUsers() {

@@ -60,7 +60,8 @@ public class SecurityConfig {
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(auth -> auth
                 // Public pages
-                .requestMatchers("/", "/trang-chu", "/gioi-thieu", "/san-pham",
+                .requestMatchers("/", "/trang-chu", "/gioi-thieu", "/gioi-thieu/search",
+                                 "/san-pham", "/san-pham/search",
                                  "/tin-tuc", "/lien-he", "/login", "/dang-ky",
                                  "/css/**", "/js/**", "/images/**", "/webjars/**",
                                  "/error/**").permitAll()
@@ -91,7 +92,8 @@ public class SecurityConfig {
             )
             // Tắt CSRF cho REST API endpoints, giữ cho web form
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/api/**")
+                .ignoringRequestMatchers("/api/**", "/gioi-thieu/search", "/san-pham/search",
+                        "/admin/building/search", "/admin/customer/search")
             );
 
         return http.build();

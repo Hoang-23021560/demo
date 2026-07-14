@@ -1,13 +1,18 @@
 package com.javaweb.model;
 
-import java.util.Date;
-
-//them vao 1 giao dich
 public class TransactionRequest {
+    private Long id;              // dùng cho update (null khi tạo mới)
     private Long customerId;
     private Long transactionTypeId;
     private String note;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getCustomerId() {
         return customerId;
@@ -32,6 +37,4 @@ public class TransactionRequest {
     public void setNote(String note) {
         this.note = note;
     }
-
-
 }

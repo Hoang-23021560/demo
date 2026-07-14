@@ -10,33 +10,31 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex">
 
+<!-- ══ SIDEBAR ══════════════════════════════════════════════════ -->
 <aside class="w-56 bg-white shadow-lg flex flex-col min-h-screen shrink-0">
     <div class="h-16 flex items-center px-4 border-b border-gray-100">
         <svg class="w-7 h-7 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3"/>
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
         </svg>
         <span class="ml-2 text-lg font-bold text-green-600">SkyLand</span>
     </div>
     <nav class="flex-1 py-4 px-2 space-y-1">
-        <a th:href="@{/admin/building}"
-           class="sidebar-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors">
+        <a th:href="@{/admin/building}" class="sidebar-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors">
             <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
             </svg>
             Quản lý Tòa Nhà
         </a>
-        <a th:href="@{/admin/account}"
-           class="sidebar-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors">
+        <a th:href="@{/admin/account}" class="sidebar-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors">
             <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
             Quản lý Tài Khoản
         </a>
-        <a th:href="@{/admin/customer}"
-           class="sidebar-item active flex items-center gap-3 px-3 py-2.5 text-sm font-semibold">
+        <a th:href="@{/admin/customer}" class="sidebar-item active flex items-center gap-3 px-3 py-2.5 text-sm font-semibold">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -46,28 +44,406 @@
     </nav>
 </aside>
 
-<div class="flex-1 flex flex-col">
-    <header class="h-16 bg-blue-700 flex items-center justify-between px-6 shadow-sm">
-        <span class="text-white font-bold text-lg">Trang quản trị</span>
+<!-- ══ MAIN CONTENT ══════════════════════════════════════════════ -->
+<div class="flex-1 flex flex-col min-h-screen overflow-hidden">
+    <header class="h-16 bg-blue-700 flex items-center justify-between px-6 shadow-sm shrink-0">
+        <span class="text-white font-bold text-lg tracking-wide">Trang quản trị</span>
         <div class="flex items-center gap-3">
             <span class="text-blue-100 text-sm">Xin chào, <span th:text="${currentUser}" class="font-semibold text-white">admin</span></span>
             <form th:action="@{/logout}" method="post" class="inline">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <button type="submit" class="px-3 py-1.5 bg-blue-800 hover:bg-blue-900 text-white text-xs rounded-lg transition-colors">Đăng xuất</button>
+                <button type="submit" class="px-3 py-1.5 bg-blue-800 hover:bg-blue-900 text-white text-xs rounded-lg">Đăng xuất</button>
             </form>
         </div>
     </header>
-    <main class="flex-1 p-6">
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-10 text-center">
-            <svg class="w-16 h-16 text-pink-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">Quản lý Khách Hàng</h2>
-            <p class="text-gray-500">Tính năng đang được phát triển...</p>
+
+    <!-- Breadcrumb -->
+    <div class="bg-white border-b border-gray-200 px-6 py-3 flex items-center gap-2 text-sm">
+        <a th:href="@{/}" class="text-blue-600 hover:text-blue-700">Trang chủ</a>
+        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        <span class="text-gray-600 font-medium">Quản lý khách hàng</span>
+    </div>
+
+    <main class="flex-1 p-6 overflow-y-auto">
+
+        <!-- SEARCH FORM -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 mb-6">
+            <button type="button" onclick="toggleAccordion('cust-search-body')"
+                    class="w-full flex items-center justify-between px-6 py-4 text-left">
+                <span class="font-bold text-gray-800 text-base flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    Tìm Kiếm Khách Hàng
+                </span>
+                <svg data-accordion="cust-search-body" class="accordion-arrow open w-5 h-5 text-gray-400"
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+                </svg>
+            </button>
+            <div id="cust-search-body" class="border-t border-gray-100">
+                <form th:action="@{/admin/customer/search}" method="post"
+                      th:object="${searchRequest}" class="p-6">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Tên khách hàng</label>
+                            <input type="text" th:field="*{name}" placeholder="Nhập tên khách hàng..."
+                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Số điện thoại</label>
+                            <input type="text" th:field="*{phone}" placeholder="Nhập số điện thoại..."
+                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Email</label>
+                            <input type="text" th:field="*{email}" placeholder="Nhập email..."
+                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-end">
+                        <button type="submit" class="px-8 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg text-sm shadow-md flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            Tìm kiếm
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- CUSTOMER TABLE -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                <h2 class="font-bold text-gray-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Danh sách khách hàng
+                    <span th:if="${totalResults != null}"
+                          class="ml-2 px-2 py-0.5 bg-pink-100 text-pink-700 text-xs font-semibold rounded-full"
+                          th:text="${totalResults} + ' khách hàng'"></span>
+                </h2>
+                <button onclick="openCustomerModal(null)"
+                        class="flex items-center gap-1.5 px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold rounded-lg transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Thêm khách hàng
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="admin-table w-full text-sm">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-600 uppercase text-xs font-semibold tracking-wide">
+                            <th class="px-4 py-3 text-left">STT</th>
+                            <th class="px-4 py-3 text-left">Tên khách hàng</th>
+                            <th class="px-4 py-3 text-left">Điện thoại</th>
+                            <th class="px-4 py-3 text-left">Email</th>
+                            <th class="px-4 py-3 text-left">Nhân viên phụ trách</th>
+                            <th class="px-4 py-3 text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr th:if="${#lists.isEmpty(customers)}">
+                            <td colspan="6" class="text-center py-16 text-gray-400">
+                                <svg class="w-12 h-12 mx-auto mb-3 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                                <p class="text-sm">Chưa có khách hàng nào.</p>
+                            </td>
+                        </tr>
+                        <tr th:each="c, stat : ${customers}"
+                            class="hover:bg-pink-50 transition-colors">
+                            <td class="px-4 py-3 text-gray-500 font-mono" th:text="${stat.index + 1}"></td>
+                            <td class="px-4 py-3 font-semibold text-gray-900" th:text="${c.name}"></td>
+                            <td class="px-4 py-3 text-gray-600" th:text="${c.phone}"></td>
+                            <td class="px-4 py-3 text-gray-600" th:text="${c.email}"></td>
+                            <td class="px-4 py-3 text-gray-600 text-xs">
+                                <span th:each="s, si : ${c.managerStaffCustomer}">
+                                    <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full mr-1" th:text="${s}"></span>
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="flex items-center justify-center gap-1.5">
+                                    <!-- Sửa KH -->
+                                    <button th:onclick="|openCustomerModal(${c.id}, '${c.name}', '${c.phone}', '${c.email}')|"
+                                            class="p-1.5 bg-yellow-400 hover:bg-yellow-500 text-white rounded-lg" title="Sửa">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                    </button>
+                                    <!-- Xóa KH -->
+                                    <button th:onclick="|deleteCustomer(${c.id})|"
+                                            class="p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg" title="Xóa">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                    <!-- Xem giao dịch -->
+                                    <button th:onclick="|openTransactionModal(${c.id}, '${c.name}')|"
+                                            class="p-1.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg" title="Giao dịch">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
 </div>
+
+<!-- ══ MODAL THÊM/SỬA KHÁCH HÀNG ══ -->
+<div id="customer-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <h3 id="cust-modal-title" class="text-lg font-bold text-gray-800">Thêm khách hàng</h3>
+            <button onclick="closeCustomerModal()" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="p-6 space-y-4">
+            <input type="hidden" id="c-id"/>
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">Tên khách hàng <span class="text-red-500">*</span></label>
+                <input id="c-name" type="text" placeholder="Tên khách hàng..."
+                       class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"/>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">Số điện thoại</label>
+                <input id="c-phone" type="text" placeholder="0912345678"
+                       class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"/>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">Email</label>
+                <input id="c-email" type="email" placeholder="email@example.com"
+                       class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"/>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">Nhân viên phụ trách</label>
+                <select id="c-staffId" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white">
+                    <option value="">-- Chọn nhân viên --</option>
+                    <option th:each="s : ${staffList}" th:value="${s.id}" th:text="${s.userName}"></option>
+                </select>
+            </div>
+            <div id="c-error" class="hidden text-sm text-red-600 bg-red-50 px-4 py-2 rounded-lg"></div>
+        </div>
+        <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
+            <button onclick="closeCustomerModal()" class="px-5 py-2 text-sm font-semibold text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">Hủy</button>
+            <button onclick="saveCustomer()" class="px-6 py-2 text-sm font-bold text-white bg-pink-500 hover:bg-pink-600 rounded-lg">Lưu</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══ MODAL GIAO DỊCH ══ -->
+<div id="transaction-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] flex flex-col">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
+            <h3 class="text-lg font-bold text-gray-800">
+                Giao dịch: <span id="txn-customer-name" class="text-indigo-600"></span>
+            </h3>
+            <button onclick="closeTransactionModal()" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Thêm giao dịch mới -->
+        <div class="px-6 pt-4 pb-3 bg-indigo-50 border-b border-indigo-100 shrink-0">
+            <p class="text-xs font-semibold text-indigo-700 uppercase mb-3">Thêm giao dịch mới</p>
+            <div class="flex gap-3">
+                <select id="txn-type" class="flex-1 px-3 py-2 border border-indigo-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                    <option value="1">Quá trình chăm sóc</option>
+                    <option value="2">Đặt cọc giữ chỗ</option>
+                </select>
+                <button onclick="addTransaction()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg">Thêm</button>
+            </div>
+            <input id="txn-note" type="text" placeholder="Ghi chú giao dịch..."
+                   class="mt-2 w-full px-3 py-2 border border-indigo-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"/>
+            <div id="txn-error" class="hidden mt-2 text-xs text-red-600 bg-red-50 px-3 py-1.5 rounded-lg"></div>
+        </div>
+
+        <!-- Danh sách giao dịch -->
+        <div class="flex-1 overflow-y-auto px-6 py-4">
+            <p class="text-xs font-semibold text-gray-500 uppercase mb-3">Lịch sử giao dịch</p>
+            <div id="txn-list" class="space-y-2">
+                <p class="text-center text-gray-400 text-sm py-4">Đang tải...</p>
+            </div>
+        </div>
+
+        <div class="px-6 py-3 border-t border-gray-100 flex justify-end shrink-0">
+            <button onclick="closeTransactionModal()" class="px-5 py-2 text-sm font-semibold text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">Đóng</button>
+        </div>
+    </div>
+</div>
+
 <script th:src="@{/js/admin.js}"></script>
+<script>
+// ── Biến trạng thái ──────────────────────────────────────────────
+let currentCustomerId = null;
+
+// ══ CUSTOMER CRUD ════════════════════════════════════════════════
+
+function openCustomerModal(id, name, phone, email) {
+    document.getElementById('c-error').classList.add('hidden');
+    if (id) {
+        document.getElementById('cust-modal-title').textContent = 'Sửa khách hàng';
+        document.getElementById('c-id').value    = id;
+        document.getElementById('c-name').value  = name  || '';
+        document.getElementById('c-phone').value = phone || '';
+        document.getElementById('c-email').value = email || '';
+    } else {
+        document.getElementById('cust-modal-title').textContent = 'Thêm khách hàng mới';
+        document.getElementById('c-id').value    = '';
+        document.getElementById('c-name').value  = '';
+        document.getElementById('c-phone').value = '';
+        document.getElementById('c-email').value = '';
+        document.getElementById('c-staffId').value = '';
+    }
+    document.getElementById('customer-modal').classList.remove('hidden');
+}
+
+function closeCustomerModal() {
+    document.getElementById('customer-modal').classList.add('hidden');
+}
+
+async function saveCustomer() {
+    const id       = document.getElementById('c-id').value;
+    const staffVal = document.getElementById('c-staffId').value;
+    const body = {
+        id:       id ? parseInt(id) : null,
+        name:     document.getElementById('c-name').value.trim(),
+        phone:    document.getElementById('c-phone').value.trim(),
+        email:    document.getElementById('c-email').value.trim(),
+        staffIds: staffVal ? [parseInt(staffVal)] : []
+    };
+    if (!body.name) {
+        showError('c-error', 'Tên khách hàng không được để trống!');
+        return;
+    }
+    const method = id ? 'PUT' : 'POST';
+    try {
+        const res = await fetch('/api/customer/', {
+            method,
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error('Lỗi server: ' + res.status);
+        closeCustomerModal();
+        location.reload();
+    } catch (e) {
+        showError('c-error', e.message);
+    }
+}
+
+function deleteCustomer(id) {
+    if (!confirm('Xóa khách hàng này? Thao tác không thể hoàn tác!')) return;
+    fetch('/api/customer/' + id, { method: 'DELETE' })
+        .then(r => { if (r.ok) location.reload(); else alert('Xóa thất bại!'); });
+}
+
+// ══ TRANSACTION ══════════════════════════════════════════════════
+
+function openTransactionModal(customerId, customerName) {
+    currentCustomerId = customerId;
+    document.getElementById('txn-customer-name').textContent = customerName;
+    document.getElementById('txn-note').value = '';
+    document.getElementById('txn-type').value = '1';
+    document.getElementById('txn-error').classList.add('hidden');
+    document.getElementById('transaction-modal').classList.remove('hidden');
+    loadTransactions(customerId);
+}
+
+function closeTransactionModal() {
+    document.getElementById('transaction-modal').classList.add('hidden');
+    currentCustomerId = null;
+}
+
+async function loadTransactions(customerId) {
+    const list = document.getElementById('txn-list');
+    list.innerHTML = '<p class="text-center text-gray-400 text-sm py-4">Đang tải...</p>';
+    try {
+        const res = await fetch('/api/transaction/?customerId=' + customerId);
+        if (!res.ok) throw new Error('Lỗi tải dữ liệu');
+        const transactions = await res.json();
+        if (transactions.length === 0) {
+            list.innerHTML = '<p class="text-center text-gray-400 text-sm py-4">Chưa có giao dịch nào.</p>';
+            return;
+        }
+        list.innerHTML = transactions.map(t => `
+            <div class="flex items-start justify-between gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="px-2 py-0.5 text-xs font-semibold rounded-full ${t.transactionType && t.transactionType.includes('cọc') ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}">
+                            ${escHtml(t.transactionType || '-')}
+                        </span>
+                        <span class="text-xs text-gray-400">${t.createDate ? new Date(t.createDate).toLocaleDateString('vi-VN') : ''}</span>
+                    </div>
+                    <p class="text-sm text-gray-700 truncate">${escHtml(t.note || '')}</p>
+                </div>
+                <button onclick="deleteTransaction(${t.id})"
+                        class="shrink-0 p-1.5 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg transition-colors" title="Xóa">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        `).join('');
+    } catch (e) {
+        list.innerHTML = '<p class="text-center text-red-400 text-sm py-4">' + e.message + '</p>';
+    }
+}
+
+async function addTransaction() {
+    const note = document.getElementById('txn-note').value.trim();
+    const typeId = parseInt(document.getElementById('txn-type').value);
+    if (!note) { showError('txn-error', 'Vui lòng nhập ghi chú giao dịch!'); return; }
+    try {
+        const res = await fetch('/api/transaction/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ customerId: currentCustomerId, transactionTypeId: typeId, note })
+        });
+        if (!res.ok) throw new Error('Lỗi server: ' + res.status);
+        document.getElementById('txn-note').value = '';
+        document.getElementById('txn-error').classList.add('hidden');
+        loadTransactions(currentCustomerId);
+    } catch (e) {
+        showError('txn-error', e.message);
+    }
+}
+
+function deleteTransaction(id) {
+    if (!confirm('Xóa giao dịch này?')) return;
+    fetch('/api/transaction/' + id, { method: 'DELETE' })
+        .then(r => { if (r.ok) loadTransactions(currentCustomerId); else alert('Xóa thất bại!'); });
+}
+
+// ── Helpers ──────────────────────────────────────────────────────
+function showError(elId, msg) {
+    const el = document.getElementById(elId);
+    el.textContent = msg;
+    el.classList.remove('hidden');
+}
+
+function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
 </body>
 </html>

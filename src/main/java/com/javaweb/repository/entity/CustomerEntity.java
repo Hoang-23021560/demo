@@ -17,7 +17,7 @@ public class CustomerEntity {
     private String phone;
     @Column(name = "email")
     private String email;
-    @Column(name = "createDate")
+    @Column(name = "createdDate")
     private Date createdDate;
     @Column(name = "modifiedDate")
     private Date modifiedDate;

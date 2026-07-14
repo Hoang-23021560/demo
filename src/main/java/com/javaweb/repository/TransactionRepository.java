@@ -7,8 +7,9 @@ import java.util.List;
 
 public interface TransactionRepository {
     List<TransactionsEntity> findByIdCustomer(Long customerId);
-    // lich su giao dich khach hang
-
     void createTransaction(TransactionsEntity transactionsEntity);
+    void updateTransaction(TransactionsEntity transactionsEntity);
+    void deleteTransaction(Long id);
+    TransactionsEntity findById(Long id);
     TransactionTypeEntity findByTransactionTypeId(Long id);
 }

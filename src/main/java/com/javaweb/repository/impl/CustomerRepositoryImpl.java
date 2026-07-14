@@ -20,27 +20,24 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     @Override
     public List<CustomerEntity> findAll(CustomerSearchRequest request) {
-        StringBuilder sql = new StringBuilder("Select c from CustomerEntity c ");
-        sql.append(" left Join c.users u ").append(" where c.id is not null ");
+        // Dùng LEFT JOIN FETCH để load users ngay trong query, tránh LazyInitializationException
+        StringBuilder sql = new StringBuilder("SELECT DISTINCT c FROM CustomerEntity c ");
+        sql.append(" LEFT JOIN FETCH c.users u ").append(" WHERE c.id IS NOT NULL ");
         if(request.getId() != null){
             sql.append(" AND c.id = " + request.getId());
         }
         if(checkString(request.getName())){
-            sql.append(" AND c.name like '%" + request.getName() + "%'");
+            sql.append(" AND c.name LIKE '%" + request.getName() + "%'");
         }
         if(checkString(request.getPhone())){
-            sql.append(" AND c.phone like '%" + request.getPhone() + "%'");
+            sql.append(" AND c.phone LIKE '%" + request.getPhone() + "%'");
         }
         if(checkString(request.getEmail())){
-            sql.append(" AND c.email like '%" + request.getEmail() + "%'");
+            sql.append(" AND c.email LIKE '%" + request.getEmail() + "%'");
         }
-
 
         Query query = entityManager.createQuery(sql.toString(), CustomerEntity.class);
         return query.getResultList();
-
-
-
     }
 
     @Override
