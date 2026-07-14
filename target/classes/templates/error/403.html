@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>403 - Không có quyền truy cập</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center">
+    <div class="text-center px-4 max-w-lg">
+        <div class="text-9xl font-black text-red-200 mb-4 select-none">403</div>
+        <h1 class="text-3xl font-bold text-gray-800 mb-3">Không có quyền truy cập</h1>
+        <p class="text-gray-500 mb-8">
+            Bạn không có quyền truy cập trang này.<br/>
+            Vui lòng đăng nhập bằng tài khoản có đủ quyền hạn.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <a th:href="@{/login}"
+               class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition-colors">
+                Đăng nhập
+            </a>
+            <a th:href="@{/}"
+               class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-colors">
+                Về trang chủ
+            </a>
+        </div>
+    </div>
+</body>
+</html>

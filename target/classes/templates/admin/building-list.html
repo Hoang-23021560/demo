@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Trang quản trị - Quản lý tòa nhà</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/css/custom.css}"/>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+
+<!-- ══ SIDEBAR ══════════════════════════════════════════════════ -->
+<aside id="sidebar"
+       class="w-56 bg-white shadow-lg flex flex-col min-h-screen transition-all duration-300 shrink-0">
+
+    <!-- Logo -->
+    <div class="h-16 flex items-center px-4 border-b border-gray-100">
+        <svg class="w-7 h-7 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+        </svg>
+        <span id="sidebar-logo" class="ml-2 text-lg font-bold text-green-600 sidebar-label">SkyLand</span>
+    </div>
+
+    <!-- Nav items -->
+    <nav class="flex-1 py-4 px-2 space-y-1">
+        <!-- Quản lý tòa nhà (active) -->
+        <a th:href="@{/admin/building}"
+           class="sidebar-item active flex items-center gap-3 px-3 py-2.5 text-sm font-semibold">
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+            </svg>
+            <span class="sidebar-label">Quản lý Tòa Nhà</span>
+        </a>
+        <!-- Quản lý tài khoản -->
+        <a th:href="@{/admin/account}"
+           class="sidebar-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors">
+            <svg class="w-5 h-5 shrink-0 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span class="sidebar-label">Quản lý Tài Khoản</span>
+        </a>
+        <!-- Quản lý khách hàng -->
+        <a th:href="@{/admin/customer}"
+           class="sidebar-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors">
+            <svg class="w-5 h-5 shrink-0 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span class="sidebar-label">Quản lý Khách Hàng</span>
+        </a>
+    </nav>
+
+    <!-- Collapse button -->
+    <div class="p-3 border-t border-gray-100">
+        <button onclick="toggleSidebar()"
+                class="w-full flex items-center justify-center gap-2 p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors text-xs">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+            </svg>
+            <span class="sidebar-label">Thu gọn</span>
+        </button>
+    </div>
+</aside>
+
+<!-- ══ MAIN CONTENT ══════════════════════════════════════════════ -->
+<div class="flex-1 flex flex-col min-h-screen overflow-hidden">
+
+    <!-- Top Header bar -->
+    <header class="h-16 bg-blue-700 flex items-center justify-between px-6 shadow-sm shrink-0">
+        <div class="flex items-center gap-3">
+            <span class="text-white font-bold text-lg tracking-wide">Trang quản trị</span>
+        </div>
+        <!-- User dropdown -->
+        <div class="relative">
+            <button id="user-btn" onclick="toggleDropdown('user-dropdown')"
+                    class="flex items-center gap-2 text-white hover:text-blue-100 transition-colors">
+                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                </div>
+                <span class="text-sm font-medium">Xin chào, <span th:text="${currentUser}">admin</span></span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+            <div id="user-dropdown"
+                 class="hidden absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50">
+                <a th:href="@{/}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7"/>
+                    </svg>
+                    Trang chủ
+                </a>
+                <hr class="my-1 border-gray-100"/>
+                <form th:action="@{/logout}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <button type="submit"
+                            class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        Đăng xuất
+                    </button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="bg-white border-b border-gray-200 px-6 py-3 flex items-center gap-2 text-sm">
+        <a th:href="@{/}" class="flex items-center gap-1 text-blue-600 hover:text-blue-700">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3"/>
+            </svg>
+            Trang chủ
+        </a>
+        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        <span class="text-gray-600 font-medium">Quản lý tòa nhà</span>
+    </div>
+
+    <!-- Page content -->
+    <main class="flex-1 p-6 overflow-y-auto">
+
+        <!-- ── SEARCH ACCORDION ─────────────────────────────────────── -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 mb-6">
+            <!-- Accordion header -->
+            <button type="button" onclick="toggleAccordion('search-body')"
+                    class="w-full flex items-center justify-between px-6 py-4 text-left">
+                <span class="font-bold text-gray-800 text-base flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    Tìm Kiếm
+                </span>
+                <svg data-accordion="search-body"
+                     class="accordion-arrow open w-5 h-5 text-gray-400"
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+                </svg>
+            </button>
+
+            <!-- Accordion body -->
+            <div id="search-body" class="border-t border-gray-100">
+                <form th:action="@{/admin/building/search}" method="post"
+                      th:object="${searchRequest}" class="p-6">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                        <!-- Tên tòa nhà -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Tên Tòa Nhà</label>
+                            <input type="text" th:field="*{name}" placeholder="Nhập tên tòa nhà..."
+                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
+                        </div>
+                        <!-- Diện tích sàn -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Diện Tích Sàn (m²)</label>
+                            <input type="number" th:field="*{floorArea}" placeholder="VD: 500"
+                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
+                        </div>
+                        <!-- Quận -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Quận Hiện Có</label>
+                            <select th:field="*{districtId}"
+                                    class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white">
+                                <option value="">-- Chọn Quận --</option>
+                                <option th:each="d : ${districts}" th:value="${d.id}" th:text="${d.nameDistrict}"></option>
+                            </select>
+                        </div>
+                        <!-- Phường -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Phường</label>
+                            <input type="text" th:field="*{ward}" placeholder="Nhập tên phường..."
+                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
+                        </div>
+                        <!-- Đường -->
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Đường</label>
+                            <input type="text" th:field="*{street}" placeholder="Nhập tên đường..."
+                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4 mt-4">
+                        <!-- Số tầng hầm -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Số Tầng Hầm</label>
+                            <input type="number" th:field="*{numberOfBasement}" placeholder="VD: 2"
+                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
+                        </div>
+                        <!-- Hướng -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Hướng</label>
+                            <input type="text" th:field="*{direction}" placeholder="VD: Đông Nam"
+                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
+                        </div>
+                        <!-- Hạng -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Hạng</label>
+                            <input type="text" th:field="*{level}" placeholder="VD: Hạng A"
+                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
+                        </div>
+                        <!-- Diện tích từ -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Diện Tích Từ (m²)</label>
+                            <input type="number" th:field="*{rentAreaFrom}" placeholder="Từ"
+                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
+                        </div>
+                        <!-- Diện tích đến -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Diện Tích Đến (m²)</label>
+                            <input type="number" th:field="*{rentAreaTo}" placeholder="Đến"
+                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
+                        </div>
+                        <!-- Giá thuê từ -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Giá Thuê Từ</label>
+                            <input type="number" step="0.1" th:field="*{rentPriceFrom}" placeholder="Triệu/m²"
+                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
+                        </div>
+                        <!-- Giá thuê đến -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Giá Thuê Đến</label>
+                            <input type="number" step="0.1" th:field="*{rentPriceTo}" placeholder="Triệu/m²"
+                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
+                        </div>
+                        <!-- Tên quản lý -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Tên Quản Lý</label>
+                            <input type="text" th:field="*{managerName}" placeholder="Tên quản lý..."
+                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
+                        </div>
+                        <!-- Điện thoại quản lý -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Điện Thoại Quản Lý</label>
+                            <input type="text" th:field="*{managerPhone}" placeholder="SĐT quản lý..."
+                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
+                        </div>
+                    </div>
+
+                    <!-- Row: Nhân viên + checkboxes + button -->
+                    <div class="mt-4 flex flex-wrap items-end gap-6">
+                        <!-- Chọn nhân viên phụ trách -->
+                        <div class="w-full md:w-64">
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Chọn Nhân Viên Phụ Trách</label>
+                            <select th:field="*{staffId}"
+                                    class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white">
+                                <option value="">-- Chọn nhân viên --</option>
+                                <option th:each="staff : ${staffList}"
+                                        th:value="${staff.id}"
+                                        th:text="${staff.userName}"></option>
+                            </select>
+                        </div>
+
+                        <!-- Checkboxes loại tòa nhà -->
+                        <div class="flex flex-wrap items-center gap-4">
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide w-full">Loại mặt bằng</label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" name="code" value="NOI_THAT"
+                                       class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-400"/>
+                                <span class="text-sm text-gray-700">Nội Thất</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" name="code" value="TANG_TRET"
+                                       class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-400"/>
+                                <span class="text-sm text-gray-700">Tầng Trệt</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" name="code" value="NGUYEN_CAN"
+                                       class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-400"/>
+                                <span class="text-sm text-gray-700">Nguyên Căn</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" name="code" value="VAN_PHONG"
+                                       class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-400"/>
+                                <span class="text-sm text-gray-700">Văn Phòng</span>
+                            </label>
+                        </div>
+
+                        <!-- Search button -->
+                        <div class="ml-auto">
+                            <button type="submit"
+                                    class="px-8 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg text-sm transition-all shadow-md flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                                Tìm kiếm
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div><!-- end search accordion -->
+
+        <!-- ── RESULTS TABLE ─────────────────────────────────────────── -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200">
+            <!-- Table header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                <h2 class="font-bold text-gray-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4 6h16M4 10h16M4 14h16M4 18h7"/>
+                    </svg>
+                    Danh sách tòa nhà
+                    <span th:if="${totalResults != null}"
+                          class="ml-2 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full"
+                          th:text="${totalResults} + ' kết quả'"></span>
+                </h2>
+                <div class="flex items-center gap-2">
+                    <!-- Add new building -->
+                    <button class="flex items-center gap-1.5 px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold rounded-lg transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Thêm mới
+                    </button>
+                    <!-- Delete selected -->
+                    <button class="flex items-center gap-1.5 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold rounded-lg transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                        Xóa đã chọn
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto">
+                <table class="admin-table w-full text-sm">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-600 uppercase text-xs font-semibold tracking-wide">
+                            <th class="px-4 py-3 text-center w-10">
+                                <input type="checkbox" class="w-4 h-4 rounded border-gray-300"/>
+                            </th>
+                            <th class="px-4 py-3 text-left">STT</th>
+                            <th class="px-4 py-3 text-left">Tên tòa nhà</th>
+                            <th class="px-4 py-3 text-left">Địa chỉ</th>
+                            <th class="px-4 py-3 text-center">Tầng hầm</th>
+                            <th class="px-4 py-3 text-left">Quản lý</th>
+                            <th class="px-4 py-3 text-right">Diện tích (m²)</th>
+                            <th class="px-4 py-3 text-right">Giá thuê</th>
+                            <th class="px-4 py-3 text-left">Dt. thuê</th>
+                            <th class="px-4 py-3 text-right">Phí DV</th>
+                            <th class="px-4 py-3 text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <!-- No results -->
+                        <tr th:if="${#lists.isEmpty(buildings)}">
+                            <td colspan="11" class="text-center py-16 text-gray-400">
+                                <svg class="w-12 h-12 mx-auto mb-3 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <p class="text-sm">Nhập điều kiện tìm kiếm và nhấn <strong class="text-orange-500">Tìm kiếm</strong> để hiển thị kết quả</p>
+                            </td>
+                        </tr>
+                        <!-- Data rows -->
+                        <tr th:each="b, stat : ${buildings}"
+                            class="hover:bg-blue-50 transition-colors">
+                            <td class="px-4 py-3 text-center">
+                                <input type="checkbox" class="w-4 h-4 rounded border-gray-300"/>
+                            </td>
+                            <td class="px-4 py-3 text-gray-500 font-mono" th:text="${stat.index + 1}"></td>
+                            <td class="px-4 py-3 font-semibold text-gray-900 max-w-[180px] truncate" th:text="${b.name}"></td>
+                            <td class="px-4 py-3 text-gray-600 max-w-[200px] truncate" th:text="${b.address}"></td>
+                            <td class="px-4 py-3 text-center">
+                                <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-full"
+                                      th:text="${b.numberOfBasement}"></span>
+                            </td>
+                            <td class="px-4 py-3 text-gray-700">
+                                <div class="font-medium" th:text="${b.managerName}"></div>
+                                <div class="text-xs text-gray-400" th:text="${b.managerPhone}"></div>
+                            </td>
+                            <td class="px-4 py-3 text-right text-gray-700 font-medium" th:text="${b.floorArea}"></td>
+                            <td class="px-4 py-3 text-right">
+                                <span class="font-semibold text-green-600"
+                                      th:text="${b.rentPrice != null ? b.rentPrice + ' tr/m²' : '-'}"></span>
+                            </td>
+                            <td class="px-4 py-3 text-gray-600 text-xs" th:text="${b.rentAreas}"></td>
+                            <td class="px-4 py-3 text-right text-gray-600"
+                                th:text="${b.serviceFee != null ? b.serviceFee : '-'}"></td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="flex items-center justify-center gap-1.5">
+                                    <button class="p-1.5 bg-yellow-400 hover:bg-yellow-500 text-white rounded-lg transition-colors" title="Sửa">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors" title="Xóa">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div><!-- end results table -->
+
+    </main>
+</div><!-- end main content -->
+
+<script th:src="@{/js/admin.js}"></script>
+</body>
+</html>

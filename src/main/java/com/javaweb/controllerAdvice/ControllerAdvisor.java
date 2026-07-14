@@ -1,81 +1,93 @@
 package com.javaweb.controllerAdvice;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
 import com.javaweb.customexception.FieldRequierdException;
 import com.javaweb.model.ErrorResponseDTO;
-// Trả về trạng thái http status code: hãy trả về mã trạng thái có ý nghĩa mô tả chính xác loại lỗi đó.
-@ControllerAdvice
-public class ControllerAdvisor extends ResponseEntityExceptionHandler {
-	//@ExceptionHandler mô tả xem là với cái lỗi nào thì hàm tương ứng là hàm nào
-	@ExceptionHandler(ArithmeticException.class)
-    public ResponseEntity<Object> handleArithmeticException(
-            ArithmeticException ex, WebRequest request) {
-			
-			ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO();
-			errorResponseDTO.setError(ex.getMessage());
-			List<String> details = new ArrayList<>();
-			details.add("So nguyen lam sao chia het cho 0 duoc");
-			errorResponseDTO.setDetail(details);
-			return new ResponseEntity<>(errorResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
-			
-//        Map<String, Object> body = new LinkedHashMap<>();
-//        body.put("timestamp", LocalDateTime.now());
-//        body.put("message", "City not found");
-//
-//        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * ControllerAdvisor: xử lý tập trung các loại exception.
+ * Áp dụng cho tất cả @RestController (REST API).
+ * Các trang web (Thymeleaf) bắt lỗi qua errorPage trong SecurityConfig.
+ */
+@RestControllerAdvice
+public class ControllerAdvisor {
+
+    // ── Lỗi validation field ─────────────────────────────────────
+    @ExceptionHandler(FieldRequierdException.class)
+    public ResponseEntity<ErrorResponseDTO> handleFieldRequired(
+            FieldRequierdException ex, HttpServletRequest request) {
+
+        ErrorResponseDTO error = new ErrorResponseDTO();
+        error.setError("FIELD_REQUIRED");
+        List<String> details = new ArrayList<>();
+        details.add(ex.getMessage());
+        error.setDetail(details);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
-	@ExceptionHandler(FieldRequierdException.class)
-    public ResponseEntity<Object> handleFieldRequierdException(
-    		FieldRequierdException ex, WebRequest request) {
-			
-			ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO();
-			errorResponseDTO.setError(ex.getMessage());
-			List<String> details = new ArrayList<>();
-			details.add("Check lai nam hoac numberOf co the bi null do");
-			errorResponseDTO.setDetail(details);
-			return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_GATEWAY);
-	}
-//
-//    @ExceptionHandler(NoDataFoundException.class)
-//    public ResponseEntity<Object> handleNodataFoundException(
-//            NoDataFoundException ex, WebRequest request) {
-//
-//        Map<String, Object> body = new LinkedHashMap<>();
-//        body.put("timestamp", LocalDateTime.now());
-//        body.put("message", "No cities found");
-//
-//        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
-//    }
-//
-//    @Override
-//    public ResponseEntity<Object> handleMethodArgumentNotValid(
-//            MethodArgumentNotValidException ex, HttpHeaders headers,
-//            HttpStatusCode status, WebRequest request) {
-//
-//        Map<String, Object> body = new LinkedHashMap<>();
-//        body.put("timestamp", LocalDate.now());
-//        body.put("status", status.value());
-//
-//        List<String> errors = ex.getBindingResult()
-//                .getFieldErrors()
-//                .stream()
-//                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-//                .collect(Collectors.toList());
-//
-//        body.put("errors", errors);
-//
-//        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-//    }
 
+    // ── Bean Validation (@Valid) ──────────────────────────────────
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponseDTO> handleValidation(
+            MethodArgumentNotValidException ex) {
+
+        ErrorResponseDTO error = new ErrorResponseDTO();
+        error.setError("VALIDATION_FAILED");
+        List<String> details = new ArrayList<>();
+        ex.getBindingResult().getFieldErrors()
+                .forEach(fe -> details.add(fe.getField() + ": " + fe.getDefaultMessage()));
+        error.setDetail(details);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    // ── Không tìm thấy tài nguyên ────────────────────────────────
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleNotFound(NoHandlerFoundException ex) {
+        ErrorResponseDTO error = new ErrorResponseDTO();
+        error.setError("NOT_FOUND");
+        List<String> details = new ArrayList<>();
+        details.add("Không tìm thấy endpoint: " + ex.getRequestURL());
+        error.setDetail(details);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    // ── Không có quyền truy cập (REST) ───────────────────────────
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponseDTO> handleAccessDenied(AccessDeniedException ex) {
+        ErrorResponseDTO error = new ErrorResponseDTO();
+        error.setError("ACCESS_DENIED");
+        List<String> details = new ArrayList<>();
+        details.add("Bạn không có quyền thực hiện thao tác này.");
+        error.setDetail(details);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
+
+    // ── Lỗi chung ────────────────────────────────────────────────
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDTO> handleGeneral(
+            Exception ex, HttpServletRequest request) {
+
+        // Chỉ bắt lỗi cho REST API, bỏ qua request từ trình duyệt (web form)
+        String acceptHeader = request.getHeader("Accept");
+        if (acceptHeader != null && acceptHeader.contains("text/html")) {
+            // Ném lại để Spring MVC xử lý (hiển thị trang error)
+            throw new RuntimeException(ex);
+        }
+
+        ErrorResponseDTO error = new ErrorResponseDTO();
+        error.setError("INTERNAL_SERVER_ERROR");
+        List<String> details = new ArrayList<>();
+        details.add(ex.getMessage() != null ? ex.getMessage() : "Đã xảy ra lỗi không xác định");
+        error.setDetail(details);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
 }
-

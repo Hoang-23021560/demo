@@ -18,8 +18,8 @@ public class UserEntity {
     private String passWord;
     @Column(name = "status")
     private String status;
-    @Column(name = "createDate")
-    private Date createDate;
+    @Column(name = "createdDate")
+    private Date createdDate;
     @Column(name = "modifiedDate")
     private Date modifiedDate;
 //    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY )
@@ -93,12 +93,12 @@ public class UserEntity {
         this.status = status;
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Date getModifiedDate() {

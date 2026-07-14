@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>HoangSkyLand - Đăng nhập</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/css/custom.css}"/>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-400 via-emerald-500 to-teal-600">
+
+<!-- Background decorative circles -->
+<div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/2 left-1/4 w-64 h-64 bg-white/5 rounded-full blur-2xl"></div>
+</div>
+
+<div class="relative z-10 w-full max-w-md mx-4">
+    <!-- Logo at top -->
+    <div class="text-center mb-8">
+        <a th:href="@{/}" class="inline-flex items-center gap-2">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            <span class="text-3xl font-extrabold text-white tracking-tight">SkyLand</span>
+        </a>
+    </div>
+
+    <!-- Login card -->
+    <div class="login-card bg-white rounded-3xl p-8 sm:p-10">
+
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight mb-2">LOGIN</h1>
+            <p class="text-gray-500 text-sm">Please enter your login and password!</p>
+        </div>
+
+        <!-- Error message -->
+        <div th:if="${errorMessage}"
+             class="flash-msg mb-6 flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+            <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <span class="text-red-700 text-sm font-medium" th:text="${errorMessage}"></span>
+        </div>
+
+        <!-- Logout success message -->
+        <div th:if="${logoutMessage}"
+             class="flash-msg mb-6 flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
+            <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span class="text-green-700 text-sm font-medium" th:text="${logoutMessage}"></span>
+        </div>
+
+        <!-- Login form -->
+        <form th:action="@{/login}" method="post" class="space-y-5">
+            <!-- CSRF token -->
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <!-- Username -->
+            <div>
+                <label for="userName" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Tên đăng nhập
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                    </div>
+                    <input id="userName" name="userName" type="text"
+                           autocomplete="username" required
+                           placeholder="Nhập tên đăng nhập"
+                           class="w-full pl-12 pr-4 py-3 bg-blue-50 border border-blue-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent focus:bg-white transition"/>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Mật khẩu
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <input id="password" name="password" type="password"
+                           autocomplete="current-password" required
+                           placeholder="Nhập mật khẩu"
+                           class="w-full pl-12 pr-12 py-3 bg-blue-50 border border-blue-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent focus:bg-white transition"/>
+                    <!-- Toggle password visibility -->
+                    <button type="button" onclick="togglePassword()"
+                            class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600">
+                        <svg id="eye-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Remember me + Forgot password -->
+            <div class="flex items-center justify-between">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" name="remember-me"
+                           class="w-4 h-4 text-green-500 border-gray-300 rounded focus:ring-green-400"/>
+                    <span class="text-sm text-gray-600">Remember Password</span>
+                </label>
+                <a href="#" class="text-sm text-gray-500 hover:text-green-600 transition-colors">
+                    Forgot password?
+                </a>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit"
+                    class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-base transition-all transform hover:scale-[1.02] shadow-lg">
+                Đăng nhập
+            </button>
+        </form>
+
+        <!-- Sign up link -->
+        <p class="text-center text-sm text-gray-500 mt-6">
+            Don't have an account?
+            <a th:href="@{/dang-ky}" class="text-green-500 hover:text-green-600 font-semibold transition-colors">Sign Up</a>
+        </p>
+    </div>
+</div>
+
+<script th:src="@{/js/admin.js}"></script>
+<script>
+    function togglePassword() {
+        const input = document.getElementById('password');
+        input.type = input.type === 'password' ? 'text' : 'password';
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Trang quản trị - Quản lý khách hàng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/css/custom.css}"/>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+
+<aside class="w-56 bg-white shadow-lg flex flex-col min-h-screen shrink-0">
+    <div class="h-16 flex items-center px-4 border-b border-gray-100">
+        <svg class="w-7 h-7 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3"/>
+        </svg>
+        <span class="ml-2 text-lg font-bold text-green-600">SkyLand</span>
+    </div>
+    <nav class="flex-1 py-4 px-2 space-y-1">
+        <a th:href="@{/admin/building}"
+           class="sidebar-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors">
+            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+            </svg>
+            Quản lý Tòa Nhà
+        </a>
+        <a th:href="@{/admin/account}"
+           class="sidebar-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors">
+            <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Quản lý Tài Khoản
+        </a>
+        <a th:href="@{/admin/customer}"
+           class="sidebar-item active flex items-center gap-3 px-3 py-2.5 text-sm font-semibold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            Quản lý Khách Hàng
+        </a>
+    </nav>
+</aside>
+
+<div class="flex-1 flex flex-col">
+    <header class="h-16 bg-blue-700 flex items-center justify-between px-6 shadow-sm">
+        <span class="text-white font-bold text-lg">Trang quản trị</span>
+        <div class="flex items-center gap-3">
+            <span class="text-blue-100 text-sm">Xin chào, <span th:text="${currentUser}" class="font-semibold text-white">admin</span></span>
+            <form th:action="@{/logout}" method="post" class="inline">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="px-3 py-1.5 bg-blue-800 hover:bg-blue-900 text-white text-xs rounded-lg transition-colors">Đăng xuất</button>
+            </form>
+        </div>
+    </header>
+    <main class="flex-1 p-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-10 text-center">
+            <svg class="w-16 h-16 text-pink-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Quản lý Khách Hàng</h2>
+            <p class="text-gray-500">Tính năng đang được phát triển...</p>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/admin.js}"></script>
+</body>
+</html>

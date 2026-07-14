@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--/* ═══════════════════════════════════════════════════
+     PUBLIC FOOTER  –  dùng th:replace="fragments/footer :: footer"
+     ═══════════════════════════════════════════════════ */-->
+<footer th:fragment="footer" class="bg-gray-900 text-gray-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+
+            <!-- Brand -->
+            <div class="md:col-span-1">
+                <div class="flex items-center gap-2 mb-4">
+                    <svg class="w-7 h-7 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    <span class="text-xl font-bold text-white">SkyLand</span>
+                </div>
+                <p class="text-sm text-gray-400 leading-relaxed">
+                    Nền tảng quản lý và giao dịch bất động sản hàng đầu, kết nối chủ nhà với khách thuê một cách nhanh chóng và minh bạch.
+                </p>
+            </div>
+
+            <!-- Links -->
+            <div>
+                <h3 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Trang</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a th:href="@{/}" class="hover:text-green-400 transition-colors">Trang chủ</a></li>
+                    <li><a th:href="@{/gioi-thieu}" class="hover:text-green-400 transition-colors">Giới thiệu</a></li>
+                    <li><a th:href="@{/san-pham}" class="hover:text-green-400 transition-colors">Sản phẩm</a></li>
+                    <li><a th:href="@{/tin-tuc}" class="hover:text-green-400 transition-colors">Tin tức</a></li>
+                    <li><a th:href="@{/lien-he}" class="hover:text-green-400 transition-colors">Liên hệ</a></li>
+                </ul>
+            </div>
+
+            <!-- Services -->
+            <div>
+                <h3 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Dịch vụ</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><span class="hover:text-green-400 transition-colors cursor-pointer">Cho thuê văn phòng</span></li>
+                    <li><span class="hover:text-green-400 transition-colors cursor-pointer">Mặt bằng tầng trệt</span></li>
+                    <li><span class="hover:text-green-400 transition-colors cursor-pointer">Nguyên căn</span></li>
+                    <li><span class="hover:text-green-400 transition-colors cursor-pointer">Tư vấn bất động sản</span></li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div>
+                <h3 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Liên hệ</h3>
+                <ul class="space-y-3 text-sm">
+                    <li class="flex items-start gap-2">
+                        <svg class="w-4 h-4 mt-0.5 text-green-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        <span>144 Xuân Thủy, Cầu Giấy, Hà Nội</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-green-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                        </svg>
+                        <span>(024) 3754 7777</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-green-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        <span>info@hoangskyland.vn</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-500">
+            <span>© 2024 HoangSkyLand. All rights reserved.</span>
+            <span>Thiết kế bởi <span class="text-green-400 font-medium">HoangSkyLand Team</span></span>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
