@@ -2,6 +2,7 @@ package com.javaweb.service.impl;
 
 import com.javaweb.Builder.BuildingSearchBuilder;
 import com.javaweb.Converter.BuildingSearchBuilderConverter;
+import com.javaweb.model.BuildingDetailResponse;
 import com.javaweb.model.BuildingRequest;
 import com.javaweb.model.BuildingResponse;
 import com.javaweb.model.BuildingSearchRequest;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,6 +61,7 @@ public class BuildingServiceImpl implements BuildingService {
         // 2. Vòng lặp duyệt qua từng thực thể và chuyển đổi (Mapping) sang DTO kết quả
         for (BuildingEntity entity : buildingEntities) {
             BuildingResponse response = modelMapper.map(entity, BuildingResponse.class);
+            response.setId(entity.getId()); // đảm bảo id luôn được set
 
             // Field 1: Tên tòa nhà 
             //response.setName(entity.getName());
@@ -121,6 +124,49 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Override
     @Transactional
+    public BuildingDetailResponse findDetailById(Long id) {
+        BuildingEntity entity = buildingRepository.findById(id);
+        if (entity == null) {
+            throw new RuntimeException("Toa nha khong ton tai");
+        }
+        BuildingDetailResponse dto = new BuildingDetailResponse();
+        dto.setId(entity.getId());
+        dto.setName(entity.getName());
+        dto.setWard(entity.getWard());
+        dto.setStreet(entity.getStreet());
+        dto.setDirection(entity.getDirection());
+        dto.setLevel(entity.getLevel());
+        dto.setNumberOfBasement(entity.getNumberOfBasement());
+        dto.setFloorArea(entity.getFloorArea() != null ? entity.getFloorArea().longValue() : null);
+        dto.setRentPrice(entity.getRentPrice());
+        dto.setServiceFee(entity.getServiceFee());
+        dto.setManagerName(entity.getManagerName());
+        dto.setManagerPhone(entity.getManagerPhone());
+
+        if (entity.getDistrict() != null) {
+            dto.setDistrictId(entity.getDistrict().getId());
+        }
+
+        List<Integer> rentAreaList = entity.getRentarea().stream()
+                .map(RentAreaEntity::getValue)
+                .collect(Collectors.toList());
+        dto.setRentAreas(rentAreaList);
+
+        List<String> buildingTypeList = entity.getBuildingType().stream()
+                .map(BuildingTypeEntity::getCode)
+                .collect(Collectors.toList());
+        dto.setBuildingTypes(buildingTypeList);
+
+        List<Long> staffIds = entity.getUser().stream()
+                .map(UserEntity::getId)
+                .collect(Collectors.toList());
+        dto.setStaffIds(staffIds);
+
+        return dto;
+    }
+
+    @Override
+    @Transactional
     public void insertOrUpdate(BuildingRequest request) {
         BuildingEntity building;
         if (request.getId() != null) {
@@ -128,67 +174,88 @@ public class BuildingServiceImpl implements BuildingService {
             if (building == null) {
                 throw new RuntimeException("Toa nha khong ton tai");
             }
-
         } else {
             building = new BuildingEntity();
         }
+
+        // Map các field đơn giản trước (name, ward, street, direction, level,
+        // numberOfBasement, rentPrice, serviceFee, managerName, managerPhone...)
+        // Dùng map thủ công để tránh ModelMapper ghi đè district/rentarea/buildingType
+        building.setName(request.getName());
+        building.setWard(request.getWard());
+        building.setStreet(request.getStreet());
+        building.setDirection(request.getDirection());
+        building.setLevel(request.getLevel());
+        building.setNumberOfBasement(request.getNumberOfBasement());
+        building.setRentPrice(request.getRentPrice());
+        building.setServiceFee(request.getServiceFee());
+        building.setManagerName(request.getManagerName());
+        building.setManagerPhone(request.getManagerPhone());
+        if (request.getFloorArea() != null) {
+            building.setFloorArea(request.getFloorArea().doubleValue());
+        }
+
+        // Set timestamp
+        Date now = new Date();
+        if (request.getId() == null) {
+            building.setCreatedDate(now);  // chỉ set khi tạo mới
+        }
+        building.setModifiedDate(now);
+
+        // Xử lý District
+        if (request.getDistrictId() != null) {
+            DistrictEntity district = buildingRepository.findByDistrictId(request.getDistrictId());
+            building.setDistrict(district);
+        }
+
+        // Xử lý BuildingType (xóa cũ, thêm mới vào list gốc Hibernate đang track)
+        building.getBuildingType().clear();
+        if (request.getBuildingTypes() != null && !request.getBuildingTypes().isEmpty()) {
+            for (String code : request.getBuildingTypes()) {
+                BuildingTypeEntity buildingType = new BuildingTypeEntity();
+                buildingType.setCode(code);
+                buildingType.setBuilding(building);
+                building.getBuildingType().add(buildingType);
+            }
+        }
+
+        // Xử lý RentArea (xóa cũ, thêm mới vào list gốc Hibernate đang track)
+        building.getRentarea().clear();
+        if (request.getRentAreas() != null && !request.getRentAreas().isEmpty()) {
+            for (Integer value : request.getRentAreas()) {
+                RentAreaEntity rentArea = new RentAreaEntity();
+                rentArea.setValue(value);
+                rentArea.setBuilding(building);
+                building.getRentarea().add(rentArea);
+            }
+        }
+
+        // Xử lý Staff (xóa quan hệ cũ, gán mới vào list gốc)
         if (request.getId() != null) {
-            for (UserEntity user : new ArrayList<>(building.getUser())) {// lay ra 1 list các nhân viên quản lý tòa nhà có id gửi request
+            for (UserEntity user : new ArrayList<>(building.getUser())) {
                 user.getBuildings().remove(building);
             }
             building.getUser().clear();
-        }
-        // tìm ra đối tương UserEntity tương ứng với Staffid . Để thao tác dữ liệu trên UserEntity
-        if (request.getStaffIds() != null && request.getStaffIds().size() != 0) {
-            List<UserEntity> users = buildingRepository.findByIdStaff(request.getStaffIds());
-            for (UserEntity user : users) {
-                user.getBuildings().add(building);
-            }
-            building.setUser(users);
-        }
-        if(request.getDistrictId() != null){
-            DistrictEntity district = buildingRepository.findByDistrictId(request.getDistrictId());
-
-            building.setDistrict(district);
-        }
-        List<BuildingTypeEntity> buildingTypes = new ArrayList<>();
-
-        for (String code : request.getBuildingTypes()) {
-            BuildingTypeEntity buildingType = new BuildingTypeEntity();
-
-            buildingType.setCode(code);      // code = OFFICE, HOUSE,...
-            buildingType.setBuilding(building);
-
-            buildingTypes.add(buildingType);
-        }
-
-        building.setBuildingType(buildingTypes);
-        List<RentAreaEntity> rentAreas = new ArrayList<>();
-
-        for (Integer value : request.getRentAreas()) {
-
-            RentAreaEntity rentArea = new RentAreaEntity();
-
-            rentArea.setValue(value); // hoặc Long.parseLong tùy kiểu dữ liệu
-
-            rentArea.setBuilding(building);
-
-            rentAreas.add(rentArea);
-        }
-
-        building.setRentarea(rentAreas);
-        modelMapper.map(request, building);
-        if (request.getFloorArea() != null) {
-            building.setFloorArea(request.getFloorArea().doubleValue());
         }
 
         if (request.getId() != null) {
             buildingRepository.update(building);
         } else {
-            buildingRepository.insert(building);
+            buildingRepository.insert(building); // persist trước để có ID
         }
 
-
+        // Gán staff SAU khi building đã có ID (quan trọng với insert mới)
+        if (request.getStaffIds() != null && !request.getStaffIds().isEmpty()) {
+            List<UserEntity> users = buildingRepository.findByIdStaff(request.getStaffIds());
+            for (UserEntity user : users) {
+                if (!user.getBuildings().contains(building)) {
+                    user.getBuildings().add(building);
+                }
+                if (!building.getUser().contains(user)) {
+                    building.getUser().add(user);
+                }
+            }
+        }
     }
 
 

@@ -19,7 +19,7 @@ public class BuildingRequest {
 
 
     private Double rentPrice;
-  ;
+    private Double serviceFee;
     private String managerName;
     private String managerPhone;
 
@@ -109,6 +109,14 @@ public class BuildingRequest {
 
     public void setRentPrice(Double rentPrice) {
         this.rentPrice = rentPrice;
+    }
+
+    public Double getServiceFee() {
+        return serviceFee;
+    }
+
+    public void setServiceFee(Double serviceFee) {
+        this.serviceFee = serviceFee;
     }
 
     public String getManagerName() {

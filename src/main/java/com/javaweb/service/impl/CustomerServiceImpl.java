@@ -1,5 +1,6 @@
 package com.javaweb.service.impl;
 
+import com.javaweb.model.CustomerDetailResponse;
 import com.javaweb.model.CustomerRequest;
 import com.javaweb.model.CustomerSearchRequest;
 import com.javaweb.model.CustomerResponse;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -45,6 +47,27 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
+    public CustomerDetailResponse findDetailById(Long id) {
+        CustomerEntity entity = customerRepository.findById(id);
+        if (entity == null) {
+            throw new RuntimeException("Khach hang khong ton tai");
+        }
+        CustomerDetailResponse dto = new CustomerDetailResponse();
+        dto.setId(entity.getId());
+        dto.setName(entity.getName());
+        dto.setPhone(entity.getPhone());
+        dto.setEmail(entity.getEmail());
+
+        List<Long> staffIds = entity.getUsers().stream()
+                .map(UserEntity::getId)
+                .collect(java.util.stream.Collectors.toList());
+        dto.setStaffIds(staffIds);
+
+        return dto;
+    }
+
+    @Override
+    @Transactional
     public void createOrUpdate(CustomerRequest request) {
         CustomerEntity customer;
         if(request.getId() != null){
@@ -56,12 +79,22 @@ public class CustomerServiceImpl implements CustomerService {
         else{
             customer = new CustomerEntity();
         }
-        modelMapper.map(request,customer);
+        // Map thủ công để tránh modelMapper ghi đè collection users
+        customer.setName(request.getName());
+        customer.setEmail(request.getEmail());
+        customer.setPhone(request.getPhone());
+
+        // Set timestamp
+        Date now = new Date();
+        if (request.getId() == null) {
+            customer.setCreatedDate(now);
+        }
+        customer.setModifiedDate(now);
+
         if(request.getId() != null){
             for (UserEntity user : new ArrayList<>(customer.getUsers())) {
                 user.getCustomers().remove(customer);
             }
-
             customer.getUsers().clear();
         }
         if(request.getStaffIds() != null && request.getStaffIds().size() != 0){

@@ -2,7 +2,8 @@ package com.javaweb.model; // Thay đổi package phù hợp với project của
 
 // BuidlingSearchResponse == BuildingDTO
 public class BuildingResponse {
-    
+
+    private Long id;                 // ID tòa nhà — dùng cho edit/delete
     // 11 fields đầu ra theo yêu cầu từ file timkiemtoanha.txt
     private String name;             // Tên tòa nhà
     private String address;          // Địa chỉ đầy đủ: Đường + Phường + Quận
@@ -42,6 +43,14 @@ public class BuildingResponse {
     // ==========================================
     // 2. GETTERS AND SETTERS
     // ==========================================
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

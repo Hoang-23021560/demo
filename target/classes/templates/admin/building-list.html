@@ -239,12 +239,6 @@
                         </tr>
                         <tr th:each="b, stat : ${buildings}"
                             th:data-id="${b.id}"
-                            th:data-name="${b.name}"
-                            th:data-manager-name="${b.managerName}"
-                            th:data-manager-phone="${b.managerPhone}"
-                            th:data-floor-area="${b.floorArea}"
-                            th:data-rent-price="${b.rentPrice}"
-                            th:data-service-fee="${b.serviceFee}"
                             class="hover:bg-blue-50 transition-colors">
                             <td class="px-4 py-3 text-center">
                                 <input type="checkbox" class="chk-building w-4 h-4 rounded border-gray-300" th:data-id="${b.id}"/>
@@ -377,19 +371,53 @@
 <script th:src="@{/js/admin.js}"></script>
 <script>
 // ── Building modal ──────────────────────────────────────────────
-function openBuildingModal(row) {
+async function openBuildingModal(row) {
     document.getElementById('b-error').classList.add('hidden');
     document.querySelectorAll('.b-type').forEach(c => c.checked = false);
+
     if (row) {
+        // Chế độ SỬA: fetch dữ liệu đầy đủ từ API
+        const id = row.dataset.id;
         document.getElementById('modal-title').textContent = 'Sửa tòa nhà';
-        document.getElementById('b-id').value         = row.dataset.id || '';
-        document.getElementById('b-name').value        = row.dataset.name || '';
-        document.getElementById('b-managerName').value = row.dataset.managerName || '';
-        document.getElementById('b-managerPhone').value= row.dataset.managerPhone || '';
-        document.getElementById('b-floorArea').value   = row.dataset.floorArea || '';
-        document.getElementById('b-rentPrice').value   = row.dataset.rentPrice || '';
-        document.getElementById('b-serviceFee').value  = row.dataset.serviceFee || '';
+        try {
+            const res = await fetch('/api/building/' + id);
+            if (!res.ok) throw new Error('Không tải được dữ liệu tòa nhà');
+            const b = await res.json();
+
+            document.getElementById('b-id').value              = b.id || '';
+            document.getElementById('b-name').value            = b.name || '';
+            document.getElementById('b-districtId').value      = b.districtId || '';
+            document.getElementById('b-ward').value            = b.ward || '';
+            document.getElementById('b-street').value          = b.street || '';
+            document.getElementById('b-numberOfBasement').value= b.numberOfBasement || '';
+            document.getElementById('b-floorArea').value       = b.floorArea || '';
+            document.getElementById('b-direction').value       = b.direction || '';
+            document.getElementById('b-level').value           = b.level || '';
+            document.getElementById('b-rentPrice').value       = b.rentPrice || '';
+            document.getElementById('b-serviceFee').value      = b.serviceFee || '';
+            document.getElementById('b-managerName').value     = b.managerName || '';
+            document.getElementById('b-managerPhone').value    = b.managerPhone || '';
+            document.getElementById('b-rentAreas').value       = b.rentAreas ? b.rentAreas.join(', ') : '';
+
+            // Tick buildingTypes
+            if (b.buildingTypes) {
+                b.buildingTypes.forEach(code => {
+                    const cb = document.querySelector('.b-type[value="' + code + '"]');
+                    if (cb) cb.checked = true;
+                });
+            }
+
+            // Chọn staffId (chỉ hỗ trợ 1 nhân viên trong select đơn)
+            const staffSelect = document.getElementById('b-staffId');
+            staffSelect.value = (b.staffIds && b.staffIds.length > 0) ? b.staffIds[0] : '';
+
+        } catch (e) {
+            const err = document.getElementById('b-error');
+            err.textContent = e.message;
+            err.classList.remove('hidden');
+        }
     } else {
+        // Chế độ THÊM MỚI: xóa trắng form
         document.getElementById('modal-title').textContent = 'Thêm tòa nhà mới';
         ['b-id','b-name','b-ward','b-street','b-direction','b-level',
          'b-numberOfBasement','b-floorArea','b-rentPrice','b-serviceFee',
@@ -414,7 +442,7 @@ async function saveBuildingModal() {
     const staffIdVal = document.getElementById('b-staffId').value;
     const buildingTypes = [...document.querySelectorAll('.b-type:checked')].map(c => c.value);
     const body = {
-        id: id ? parseInt(id) : null,
+        id:               id ? parseInt(id) : null,
         name:             document.getElementById('b-name').value,
         districtId:       parseInt(document.getElementById('b-districtId').value) || null,
         ward:             document.getElementById('b-ward').value,
@@ -433,7 +461,11 @@ async function saveBuildingModal() {
     };
     const method = id ? 'PUT' : 'POST';
     try {
-        const res = await fetch('/api/building/', { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+        const res = await fetch('/api/building/', {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
         if (!res.ok) throw new Error('Lỗi server: ' + res.status);
         closeBuildingModal();
         location.reload();

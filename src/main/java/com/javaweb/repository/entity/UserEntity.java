@@ -36,13 +36,13 @@ public class UserEntity {
     @JoinTable(name = "assignmentbuilding",
     joinColumns = @JoinColumn(name = "userId",nullable = false),
     inverseJoinColumns = @JoinColumn(name = "buildingId",nullable = false))
-    private List<BuildingEntity> buildings;
+    private List<BuildingEntity> buildings = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "assignmentcustomer",
     joinColumns = @JoinColumn(name = "userId",nullable = false),
     inverseJoinColumns = @JoinColumn(name = "customerId",nullable = false))
-    private List<CustomerEntity> customers;
+    private List<CustomerEntity> customers = new ArrayList<>();
 
 
     public List<RoleEntity> getRoles() {

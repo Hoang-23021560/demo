@@ -2,6 +2,7 @@ package com.javaweb.controller;
 
 import java.util.*;
 
+import com.javaweb.model.BuildingDetailResponse;
 import com.javaweb.model.BuildingRequest;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -31,7 +32,11 @@ public class BuildingAPI {
 	public List<BuildingResponse> getBuilding(BuildingSearchRequest request) {
 		List<BuildingResponse> result = buildingService.findAll(request);
 		return result;
+	}
 
+	@GetMapping("/api/building/{id}")
+	public BuildingDetailResponse getBuildingDetail(@PathVariable Long id) {
+		return buildingService.findDetailById(id);
 	}
 
 

@@ -160,6 +160,10 @@
                             </td>
                         </tr>
                         <tr th:each="c, stat : ${customers}"
+                            th:data-id="${c.id}"
+                            th:data-name="${c.name}"
+                            th:data-phone="${c.phone}"
+                            th:data-email="${c.email}"
                             class="hover:bg-pink-50 transition-colors">
                             <td class="px-4 py-3 text-gray-500 font-mono" th:text="${stat.index + 1}"></td>
                             <td class="px-4 py-3 font-semibold text-gray-900" th:text="${c.name}"></td>
@@ -173,7 +177,7 @@
                             <td class="px-4 py-3 text-center">
                                 <div class="flex items-center justify-center gap-1.5">
                                     <!-- Sửa KH -->
-                                    <button th:onclick="|openCustomerModal(${c.id}, '${c.name}', '${c.phone}', '${c.email}')|"
+                                    <button onclick="openCustomerModal(this.closest('tr'))"
                                             class="p-1.5 bg-yellow-400 hover:bg-yellow-500 text-white rounded-lg" title="Sửa">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -181,14 +185,14 @@
                                         </svg>
                                     </button>
                                     <!-- Xóa KH -->
-                                    <button th:onclick="|deleteCustomer(${c.id})|"
+                                    <button onclick="deleteCustomer(this.closest('tr').dataset.id)"
                                             class="p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg" title="Xóa">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                                         </svg>
                                     </button>
                                     <!-- Xem giao dịch -->
-                                    <button th:onclick="|openTransactionModal(${c.id}, '${c.name}')|"
+                                    <button onclick="openTransactionModal(this.closest('tr').dataset.id, this.closest('tr').dataset.name)"
                                             class="p-1.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg" title="Giao dịch">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -299,15 +303,29 @@ let currentCustomerId = null;
 
 // ══ CUSTOMER CRUD ════════════════════════════════════════════════
 
-function openCustomerModal(id, name, phone, email) {
+function openCustomerModal(row) {
     document.getElementById('c-error').classList.add('hidden');
-    if (id) {
+    if (row) {
+        // Chế độ SỬA — đọc data từ <tr>
+        const id    = row.dataset.id;
+        const name  = row.dataset.name  || '';
+        const phone = row.dataset.phone || '';
+        const email = row.dataset.email || '';
         document.getElementById('cust-modal-title').textContent = 'Sửa khách hàng';
         document.getElementById('c-id').value    = id;
-        document.getElementById('c-name').value  = name  || '';
-        document.getElementById('c-phone').value = phone || '';
-        document.getElementById('c-email').value = email || '';
+        document.getElementById('c-name').value  = name;
+        document.getElementById('c-phone').value = phone;
+        document.getElementById('c-email').value = email;
+        // Fetch staffId từ API
+        fetch('/api/customer/' + id)
+            .then(r => r.json())
+            .then(data => {
+                const staffSelect = document.getElementById('c-staffId');
+                staffSelect.value = (data.staffIds && data.staffIds.length > 0) ? data.staffIds[0] : '';
+            })
+            .catch(() => {});
     } else {
+        // Chế độ THÊM MỚI
         document.getElementById('cust-modal-title').textContent = 'Thêm khách hàng mới';
         document.getElementById('c-id').value    = '';
         document.getElementById('c-name').value  = '';

@@ -1,5 +1,6 @@
 package com.javaweb.controller;
 
+import com.javaweb.model.CustomerDetailResponse;
 import com.javaweb.model.CustomerRequest;
 import com.javaweb.model.CustomerSearchRequest;
 import com.javaweb.model.CustomerResponse;
@@ -18,6 +19,11 @@ public class CustomerAPI {
     public List<CustomerResponse> getCustomer(CustomerSearchRequest request){
         List<CustomerResponse> result = customerService.findALl(request);
         return result;
+    }
+
+    @GetMapping("/api/customer/{id}")
+    public CustomerDetailResponse getCustomerDetail(@PathVariable Long id){
+        return customerService.findDetailById(id);
     }
 //    @Transactional là annotation của Spring dùng để quản lý transaction (giao dịch).
 //

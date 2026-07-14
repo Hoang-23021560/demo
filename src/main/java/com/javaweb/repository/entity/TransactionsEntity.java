@@ -12,7 +12,7 @@ public class TransactionsEntity {
     private Long id;
     @Column(name = "note")
     private String note;
-    @Column(name = "createDate")
+    @Column(name = "createdDate")
     private Date createdDate;
     @Column(name = "modifiedDate")
     private Date modifiedDate;

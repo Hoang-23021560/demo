@@ -35,13 +35,16 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 
     public void joinTable(BuildingSearchBuilder builder,StringBuilder jpql){
         if(builder.getDistrictId() != null){
-        jpql.append(" Join b.district d ");
+            jpql.append(" JOIN b.district d ");
+        }
+        if(builder.getStaffId() != null){
+            jpql.append(" JOIN b.user u ");
         }
         if(builder.getRentAreaFrom() != null || builder.getRentAreaTo() != null){
-            jpql.append(" Join b.rentarea ra ");
+            jpql.append(" JOIN b.rentarea ra ");
         }
         if(builder.getCode() != null && builder.getCode().size() != 0){
-            jpql.append(" Join b.buildingType bt ");
+            jpql.append(" JOIN b.buildingType bt ");
         }
     }
     public void queryNormal(BuildingSearchBuilder builder,StringBuilder jpql){
@@ -80,18 +83,16 @@ public class BuildingRepositoryImpl implements BuildingRepository {
             jpql.append(" AND ra.value <= " + builder.getRentAreaTo());
         }
         if(builder.getRentPriceFrom() != null){
-            jpql.append(" AND b.rentPrice >=" + builder.getRentPriceFrom());
+            jpql.append(" AND b.rentPrice >= " + builder.getRentPriceFrom());
         }
-        if(builder.getRentAreaTo() != null){
-            jpql.append(" AND b.rentPrice <= " + builder.getRentAreaTo());
+        if(builder.getRentPriceTo() != null){
+            jpql.append(" AND b.rentPrice <= " + builder.getRentPriceTo());
         }
         if(builder.getCode() != null && builder.getCode().size() != 0){
             String codeJoin = builder.getCode().stream()
                     .map(c -> "'" + c + "'").collect(Collectors.joining(","));
-            jpql.append(" AND bt.Code IN (" + codeJoin + ")");
+            jpql.append(" AND bt.code IN (" + codeJoin + ")");
         }
-
-
     }
 
     @Override
@@ -121,6 +122,7 @@ public class BuildingRepositoryImpl implements BuildingRepository {
     @Override
     public void insert(BuildingEntity buildingEntity) {
         entityManager.persist(buildingEntity);
+        entityManager.flush(); // đảm bảo ID được gán ngay, quan hệ được ghi đúng
     }
 
     @Override

@@ -203,7 +203,7 @@ public class BuildingEntity {
 
 	@OneToMany(mappedBy = "building",fetch = FetchType.LAZY,cascade = CascadeType.ALL,
 			orphanRemoval = true)
-	private List<BuildingTypeEntity> buildingType;
+	private List<BuildingTypeEntity> buildingType = new ArrayList<>();
 
 	@ManyToMany(mappedBy = "buildings",fetch = FetchType.LAZY)
 	private List<UserEntity> user = new ArrayList<>();
